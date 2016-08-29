@@ -311,10 +311,6 @@ public class MainActivity extends AppCompatActivity
         String noteToDeliveryMan = jobParser.getNoteToDeliveryMan();
         String pickupAddress = jobParser.getPickupLocation().getAddress();
         String deliveryAddress = jobParser.getDeliveryLocation().getAddress();
-        //String pickupLat = jobParser.getPickupLocation().getPoint().getLatitude();
-        //String pickupLon = jobParser.getPickupLocation().getPoint().getLongitude();
-        //String deliveryLat = jobParser.getDeliveryLocation().getPoint().getLatitude();
-        //String deliveryLon = jobParser.getDeliveryLocation().getPoint().getLongitude();
         OrderCart orderCart = jobModel.getOrder().getOrderCart();
         String packageDescription = jobModel.getOrder().getDescription();
 
