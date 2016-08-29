@@ -38,6 +38,8 @@ public class LocationService extends Service
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
+    public static final float SMALLEST_DISPLACEMENT = 0;
+
     private static final String LOG_TAG = LocationService.class.getSimpleName();
     public static Location mCurrentLocation;
     @Inject
@@ -92,6 +94,7 @@ public class LocationService extends Service
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(SMALLEST_DISPLACEMENT);
     }
 
     protected void startLocationUpdates() {
