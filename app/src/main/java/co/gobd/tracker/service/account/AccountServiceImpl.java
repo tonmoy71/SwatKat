@@ -54,38 +54,31 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void login(String userName, String password, final LoginCallback callback) {
+        Subscription subscription = accountApi.login(userName, password,
+                Constant.Login.GRANT_TYPE, Constant.Login.CLIENT_ID, Constant.Login.CLIENT_SECRET)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<AccessToken>() {
+                    @Override
+                    public void onCompleted() {
 
-        Call<AccessToken> call = accountApi.login(userName, password,
-                Constant.Login.grantType,
-                Constant.Login.clientId,
-                Constant.Login.clientSecret);
+                    }
 
-        call.enqueue(new Callback<AccessToken>() {
-            @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
-                if (response.isSuccess()) {
-                    try {
-                        String accessToken = response.body().getAccessToken();
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.onLoginFailure();
+                    }
 
+                    @Override
+                    public void onNext(AccessToken response) {
+                        String accessToken = response.getAccessToken();
                         // Authorization header for the request
                         String bearer = "bearer " + accessToken;
-
-                        String refreshToken = response.body().getRefreshToken();
+                        String refreshToken = response.getRefreshToken();
                         callback.onLoginSuccess(accessToken, refreshToken, bearer);
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
-                } else {
-                    callback.onLoginFailure();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
-                callback.onConnectionError();
-            }
-        });
-
+                });
+        mSubscription.add(subscription);
     }
 
     @Override

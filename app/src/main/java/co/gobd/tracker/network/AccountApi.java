@@ -20,7 +20,7 @@ public interface AccountApi {
 
     @FormUrlEncoded
     @POST(BackendUrl.TaskCat.LOGIN)
-    Call<AccessToken> login(@Field("userName") String userName, @Field("password") String password,
+    Observable<AccessToken> login(@Field("userName") String userName, @Field("password") String password,
                             @Field("grant_type") String grantType, @Field("client_Id") String clientId,
                             @Field("client_secret") String clientSecret);
 
