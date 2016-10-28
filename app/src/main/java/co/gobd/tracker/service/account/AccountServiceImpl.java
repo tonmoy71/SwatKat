@@ -8,6 +8,10 @@ import co.gobd.tracker.utility.Constant;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by fahadwajed on 6/22/16.
@@ -15,9 +19,11 @@ import retrofit2.Response;
 public class AccountServiceImpl implements AccountService {
 
     private AccountApi accountApi;
+    private CompositeSubscription mSubscription;
 
     public AccountServiceImpl(AccountApi api) {
         this.accountApi = api;
+        mSubscription = new CompositeSubscription();
     }
 
     @Override
@@ -82,29 +88,27 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void getProfile(String bearer, final ProfileCallback callback) {
 
-        Call<User> call = accountApi.getProfile(bearer);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccess()) {
-                    try {
-                        String assetId = response.body().getId();
-                        if (assetId != null) {
-                            callback.onLoadProfileSuccess(assetId);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    callback.onLoadProfileFailure();
-                }
-            }
+        /* RxJava implementation */
+        accountApi.getUserProfile(bearer)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<User>() {
+                    @Override
+                    public void onCompleted() {
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                callback.onConnectionError();
-            }
-        });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.onLoadProfileFailure();
+                    }
+
+                    @Override
+                    public void onNext(User user) {
+                        callback.onLoadProfileSuccess(user.getId());
+                    }
+                });
+
     }
 
 }

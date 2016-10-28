@@ -11,6 +11,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import rx.Observable;
 
 /**
  * Created by fahad on 28-Mar-16.
@@ -24,7 +25,7 @@ public interface AccountApi {
                             @Field("client_secret") String clientSecret);
 
     @GET(BackendUrl.TaskCat.GET_PROFILE)
-    Call<User> getProfile(@Header("Authorization") String token);
+    Observable<User> getUserProfile(@Header("Authorization") String token);
 
     @POST(BackendUrl.TaskCat.GET_REGISTER)
     Call<Void> register(@Body Register register);

@@ -30,6 +30,7 @@ import dagger.Provides;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -92,6 +93,7 @@ public class ApiModule {
     public Retrofit providesRetrofitForTaskCat(OkHttpClient okHttpClient,
                                                GsonConverterFactory factory) {
         return new Retrofit.Builder()
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(BackendUrl.TaskCat.BASE)
                 .client(okHttpClient)
                 .addConverterFactory(factory)
