@@ -1,13 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     lintOptions {
         abortOnError false
     }
-
-
-    signingConfigs {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    /*signingConfigs {
         releaseSigningConfig {
             if (System.getenv("TRAVIS")) {
                 storeFile rootProject.file('keystore.jks')
@@ -23,7 +26,7 @@ android {
 
 
         }
-    }
+    }*/
 
     compileSdkVersion 24
     buildToolsVersion "23.0.3"
@@ -39,7 +42,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.releaseSigningConfig
+            //signingConfig signingConfigs.releaseSigningConfig
         }
     }
 
@@ -92,7 +95,7 @@ dependencies {
     // Material EditText
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
 
-    /* ButterKnife */
+    // ButterKnife
     compile 'com.jakewharton:butterknife:8.1.0'
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
 
@@ -114,4 +117,12 @@ dependencies {
 
     // Material dialog
     compile 'com.afollestad.material-dialogs:core:0.8.6.1'
+
+    // RxJava and RxAndroid
+    compile 'io.reactivex:rxandroid:1.2.1'
+    // Because RxAndroid releases are few and far between, it is recommended you also
+    // explicitly depend on RxJava's latest version for bug fixes and new features.
+    compile 'io.reactivex:rxjava:1.1.6'
+
+
 }
