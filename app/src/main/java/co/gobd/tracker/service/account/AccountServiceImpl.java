@@ -89,7 +89,7 @@ public class AccountServiceImpl implements AccountService {
     public void getProfile(String bearer, final ProfileCallback callback) {
 
         /* RxJava implementation */
-        accountApi.getUserProfile(bearer)
+        accountApi.getProfile(bearer)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<User>() {

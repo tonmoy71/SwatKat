@@ -25,9 +25,11 @@ public interface AccountApi {
                             @Field("client_secret") String clientSecret);
 
     @GET(BackendUrl.TaskCat.GET_PROFILE)
-    Observable<User> getUserProfile(@Header("Authorization") String token);
+    Observable<User> getProfile(@Header("Authorization") String token);
 
     @POST(BackendUrl.TaskCat.GET_REGISTER)
     Call<Void> register(@Body Register register);
+
+
 
 }
