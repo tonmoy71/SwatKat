@@ -3,7 +3,7 @@ package co.gobd.tracker.model.register;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Register {
+public class Registration {
 
     @SerializedName("UserName")
     @Expose
@@ -35,7 +35,7 @@ public class Register {
      * @param PhoneNumber
      * @param UserName
      */
-    public Register(String UserName, String Password, String ConfirmPassword, String Email, String PhoneNumber) {
+    public Registration(String UserName, String Password, String ConfirmPassword, String Email, String PhoneNumber) {
         this.UserName = UserName;
         this.Password = Password;
         this.ConfirmPassword = ConfirmPassword;

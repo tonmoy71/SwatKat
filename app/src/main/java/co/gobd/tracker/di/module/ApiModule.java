@@ -108,7 +108,7 @@ public class ApiModule {
 
     @Singleton
     @Provides
-    public AccountApi providesAuthApi(@Named(Constant.BackendName.TASK_CAT) Retrofit retrofit) {
+    public AccountApi providesAccountApi(@Named(Constant.BackendName.TASK_CAT) Retrofit retrofit) {
         return retrofit.create(AccountApi.class);
     }
 

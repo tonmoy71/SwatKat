@@ -2,9 +2,8 @@ package co.gobd.tracker.network;
 
 import co.gobd.tracker.config.BackendUrl;
 import co.gobd.tracker.model.login.AccessToken;
-import co.gobd.tracker.model.register.Register;
+import co.gobd.tracker.model.register.Registration;
 import co.gobd.tracker.model.user.User;
-import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -28,7 +27,7 @@ public interface AccountApi {
     Observable<User> getProfile(@Header("Authorization") String token);
 
     @POST(BackendUrl.TaskCat.GET_REGISTER)
-    Observable<Void> register(@Body Register register);
+    Observable<Void> register(@Body Registration registration);
 
 
 

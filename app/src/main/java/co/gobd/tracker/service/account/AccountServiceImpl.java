@@ -1,13 +1,10 @@
 package co.gobd.tracker.service.account;
 
 import co.gobd.tracker.model.login.AccessToken;
-import co.gobd.tracker.model.register.Register;
+import co.gobd.tracker.model.register.Registration;
 import co.gobd.tracker.model.user.User;
 import co.gobd.tracker.network.AccountApi;
 import co.gobd.tracker.utility.Constant;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -25,31 +22,6 @@ public class AccountServiceImpl implements AccountService {
     public AccountServiceImpl(AccountApi api) {
         this.accountApi = api;
         this.mSubscription = new CompositeSubscription();
-    }
-
-    @Override
-    public void register(Register register, final RegistrationCallback registrationCallback) {
-        Subscription subscription = accountApi.register(register)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Void>() {
-                               @Override
-                               public void onCompleted() {
-
-                               }
-
-                               @Override
-                               public void onError(Throwable e) {
-                                   registrationCallback.onRegistrationFailure();
-                               }
-
-                               @Override
-                               public void onNext(Void aVoid) {
-                                   registrationCallback.onRegistrationSuccess();
-                               }
-                           }
-                );
-        mSubscription.add(subscription);
     }
 
     @Override

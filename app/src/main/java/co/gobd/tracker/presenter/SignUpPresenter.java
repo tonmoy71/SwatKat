@@ -4,24 +4,30 @@ import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
-import co.gobd.tracker.model.register.Register;
-import co.gobd.tracker.service.account.AccountService;
-import co.gobd.tracker.service.account.RegistrationCallback;
+import co.gobd.tracker.model.register.Registration;
+import co.gobd.tracker.network.AccountApi;
 import co.gobd.tracker.ui.view.SignUpView;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class SignUpPresenter {
 
     private WeakReference<SignUpView> weakReference;
-    private AccountService accountService;
+    private AccountApi mAccountApi;
     private SignUpView signUpView;
+    private CompositeSubscription mSubscription;
 
     @Inject
-    public SignUpPresenter(AccountService accountService){
-        this.accountService = accountService;
+    public SignUpPresenter(AccountApi api) {
+        this.mAccountApi = api;
+        this.mSubscription = new CompositeSubscription();
     }
 
-    public void initialise(SignUpView View){
-        this.weakReference = new WeakReference<SignUpView>(View);
+    public void initialise(SignUpView View) {
+        this.weakReference = new WeakReference<>(View);
         signUpView = weakReference.get();
     }
 
@@ -70,38 +76,36 @@ public class SignUpPresenter {
     }
 
     public void register() {
-
         signUpView.startProgress();
+        Registration registrationModel = createRegistrationModel();
+        Subscription subscription = mAccountApi.register(registrationModel)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Void>() {
+                               @Override
+                               public void onCompleted() {
 
-        Register register = createRegisterModel();
+                               }
 
-        accountService.register(register, new RegistrationCallback() {
-            @Override
-            public void onRegistrationSuccess() {
-                signUpView.stopProgress();
-                signUpView.startLoginActivity();
-            }
+                               @Override
+                               public void onError(Throwable e) {
+                                   //FIXME Should notify the user about the error type
+                                   signUpView.stopProgress();
+                                   signUpView.showRegistrationError();
+                               }
 
-            @Override
-            public void onRegistrationFailure() {
-                //FIXME Should notify the user about the error type, need to parse the error description
-                signUpView.stopProgress();
-                signUpView.showRegistrationError();
-            }
-
-            @Override
-            public void onConnectionError() {
-                signUpView.stopProgress();
-                signUpView.showConnectionError();
-            }
-        });
+                               @Override
+                               public void onNext(Void aVoid) {
+                                   signUpView.stopProgress();
+                                   signUpView.startLoginActivity();
+                               }
+                           }
+                );
+        mSubscription.add(subscription);
     }
 
-    private Register createRegisterModel(){
-
-        //Register register = new Register(userName, password, confirmPassword, email, phoneNumber);
-
-        return new Register(
+    private Registration createRegistrationModel() {
+        return new Registration(
                 signUpView.getUserName(),
                 signUpView.getPassword(),
                 signUpView.getConfirmPassword(),
@@ -109,7 +113,8 @@ public class SignUpPresenter {
                 signUpView.getPhoneNumber());
     }
 
-    public void onDestroy(){
+    public void onDestroy() {
         weakReference = null;
+        mSubscription.unsubscribe();
     }
 }

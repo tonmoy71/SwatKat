@@ -4,7 +4,7 @@
     <string name="location_sent_successful">Location sent successfully</string>
     <string name="message_auth_asset">Logging you in…</string>
     <string name="message_auth_failed">Can\'t log you in, try again? </string>
-    <string name="message_reg_failed">Can\'t register, try again?</string>
+    <string name="message_reg_failed">Can\'t registration, try again?</string>
     <string name="message_connection_error">Can\'t connect, check your connection</string>
     <string name="message_get_profile">Getting your profile…</string>
     <string name="message_start_activity">Login successful, taking you home…</string>
