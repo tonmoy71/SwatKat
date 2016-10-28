@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -23,30 +24,32 @@ public class AccountServiceImpl implements AccountService {
 
     public AccountServiceImpl(AccountApi api) {
         this.accountApi = api;
-        mSubscription = new CompositeSubscription();
+        this.mSubscription = new CompositeSubscription();
     }
 
     @Override
-    public void getRegister(Register register, final RegistrationCallback registrationCallback) {
+    public void register(Register register, final RegistrationCallback registrationCallback) {
+        Subscription subscription = accountApi.register(register)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Void>() {
+                               @Override
+                               public void onCompleted() {
 
-        Call<Void> call = accountApi.register(register);
+                               }
 
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccess()){
-                    registrationCallback.onRegistrationSuccess();
-                } else {
-                    registrationCallback.onRegistrationFailure();
-                }
-            }
+                               @Override
+                               public void onError(Throwable e) {
+                                   registrationCallback.onRegistrationFailure();
+                               }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                registrationCallback.onConnectionError();
-            }
-        });
-
+                               @Override
+                               public void onNext(Void aVoid) {
+                                   registrationCallback.onRegistrationSuccess();
+                               }
+                           }
+                );
+        mSubscription.add(subscription);
     }
 
     @Override
@@ -87,9 +90,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void getProfile(String bearer, final ProfileCallback callback) {
-
-        /* RxJava implementation */
-        accountApi.getProfile(bearer)
+        Subscription subscription = accountApi.getProfile(bearer)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<User>() {
@@ -108,7 +109,7 @@ public class AccountServiceImpl implements AccountService {
                         callback.onLoadProfileSuccess(user.getId());
                     }
                 });
-
+        mSubscription.add(subscription);
     }
 
 }

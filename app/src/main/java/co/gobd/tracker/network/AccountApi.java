@@ -28,7 +28,7 @@ public interface AccountApi {
     Observable<User> getProfile(@Header("Authorization") String token);
 
     @POST(BackendUrl.TaskCat.GET_REGISTER)
-    Call<Void> register(@Body Register register);
+    Observable<Void> register(@Body Register register);
 
 
 

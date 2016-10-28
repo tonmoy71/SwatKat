@@ -75,7 +75,7 @@ public class SignUpPresenter {
 
         Register register = createRegisterModel();
 
-        accountService.getRegister(register, new RegistrationCallback() {
+        accountService.register(register, new RegistrationCallback() {
             @Override
             public void onRegistrationSuccess() {
                 signUpView.stopProgress();
