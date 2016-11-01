@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import co.gobd.tracker.model.register.Registration;
 import co.gobd.tracker.network.AccountApi;
 import co.gobd.tracker.ui.view.SignUpView;
-import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -81,26 +80,13 @@ public class SignUpPresenter {
         Subscription subscription = mAccountApi.register(registrationModel)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Void>() {
-                               @Override
-                               public void onCompleted() {
-
-                               }
-
-                               @Override
-                               public void onError(Throwable e) {
-                                   //FIXME Should notify the user about the error type
-                                   signUpView.stopProgress();
-                                   signUpView.showRegistrationError();
-                               }
-
-                               @Override
-                               public void onNext(Void aVoid) {
-                                   signUpView.stopProgress();
-                                   signUpView.startLoginActivity();
-                               }
-                           }
-                );
+                .subscribe(response -> {
+                    signUpView.stopProgress();
+                    signUpView.startLoginActivity();
+                }, throwable -> {
+                    signUpView.stopProgress();
+                    signUpView.showRegistrationError(throwable.getMessage());
+                });
         mSubscription.add(subscription);
     }
 

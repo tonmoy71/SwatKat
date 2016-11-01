@@ -110,7 +110,7 @@ public class LoginPresenter {
         });
     }
 
-    public void onDestroy(){
+    public void onDestroy()   {
         loginViewWeakReference = null;
     }
 }

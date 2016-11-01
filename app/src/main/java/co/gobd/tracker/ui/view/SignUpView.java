@@ -33,7 +33,7 @@ public interface SignUpView {
 
     void startProgress();
 
-    void showRegistrationError();
+    void showRegistrationError(String message);
 
     void showConnectionError();
 

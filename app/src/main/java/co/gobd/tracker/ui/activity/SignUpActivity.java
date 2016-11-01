@@ -3,9 +3,9 @@ package co.gobd.tracker.ui.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
@@ -152,8 +152,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView{
     }
 
     @Override
-    public void showRegistrationError() {
-        Toast.makeText(context, "Can't register, try again?", Toast.LENGTH_SHORT).show();
+    public void showRegistrationError(String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
